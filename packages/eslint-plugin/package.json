@@ -39,10 +39,10 @@
     "@nx/js": "file:../js",
     "@typescript-eslint/type-utils": "^8.0.0",
     "@typescript-eslint/utils": "^8.0.0",
-    "chalk": "^4.1.0",
     "confusing-browser-globals": "^1.0.9",
     "globals": "^15.9.0",
     "jsonc-eslint-parser": "^2.1.0",
+    "picocolors": "^1.1.0",
     "semver": "^7.5.3",
     "tslib": "^2.3.0"
   },
