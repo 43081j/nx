@@ -1,5 +1,5 @@
 import { GitRepository } from '../../../utils/git-utils';
-const createSpinner = require('ora');
+import { createSpinner } from 'nanospinner';
 
 export async function mergeRemoteSource(
   destinationGitClient: GitRepository,
@@ -16,7 +16,7 @@ export async function mergeRemoteSource(
 
   spinner.start(`Fetching ${tempBranch} from ${remoteName}`);
   await destinationGitClient.fetch(remoteName, tempBranch);
-  spinner.succeed(`Fetched ${tempBranch} from ${remoteName}`);
+  spinner.success(`Fetched ${tempBranch} from ${remoteName}`);
 
   spinner.start(
     `Merging files and git history from ${branchName} from ${sourceRemoteUrl} into ${destination}`
@@ -26,7 +26,7 @@ export async function mergeRemoteSource(
     `feat(repo): merge ${branchName} from ${sourceRemoteUrl}`
   );
 
-  spinner.succeed(
+  spinner.success(
     `Merged files and git history from ${branchName} from ${sourceRemoteUrl} into ${destination}`
   );
 }

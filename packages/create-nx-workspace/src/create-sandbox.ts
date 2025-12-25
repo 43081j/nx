@@ -1,6 +1,6 @@
 import { writeFileSync } from 'fs';
 import { dirSync } from 'tmp';
-import * as ora from 'ora';
+import { createSpinner } from 'nanospinner';
 import { join } from 'path';
 
 import {
@@ -18,7 +18,7 @@ import { CnwError } from './utils/error-utils';
  * @returns directory where Nx is installed
  */
 export async function createSandbox(packageManager: PackageManager) {
-  const installSpinner = ora(
+  const installSpinner = createSpinner(
     `Installing dependencies with ${packageManager}`
   ).start();
 
@@ -44,9 +44,9 @@ export async function createSandbox(packageManager: PackageManager) {
 
     await execAndWait(install, tmpDir);
 
-    installSpinner.succeed();
+    installSpinner.success();
   } catch (e) {
-    installSpinner.fail();
+    installSpinner.error();
     const message = e instanceof Error ? e.message : String(e);
     throw new CnwError(
       'SANDBOX_FAILED',

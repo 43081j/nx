@@ -1,5 +1,6 @@
 import { existsSync, unlinkSync } from 'node:fs';
 import { join } from 'path';
+import { createSpinner } from 'nanospinner';
 import { createEmptyWorkspace } from './create-empty-workspace';
 import { createPreset } from './create-preset';
 import { createSandbox } from './create-sandbox';
@@ -72,8 +73,7 @@ export async function createWorkspace<T extends CreateWorkspaceOptions>(
     const workingDir = process.cwd().replace(/\\/g, '/');
     directory = join(workingDir, name);
 
-    const ora = require('ora');
-    const workspaceSetupSpinner = ora(
+    const workspaceSetupSpinner = createSpinner(
       `Creating workspace from template`
     ).start();
 
@@ -99,11 +99,11 @@ export async function createWorkspace<T extends CreateWorkspaceOptions>(
       // Mark workspace as ready for SIGINT handler
       workspaceDirectory = directory;
 
-      workspaceSetupSpinner.succeed(
+      workspaceSetupSpinner.success(
         `Successfully created the workspace: ${directory}`
       );
     } catch (e) {
-      workspaceSetupSpinner.fail();
+      workspaceSetupSpinner.error();
       throw e;
     }
 

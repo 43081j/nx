@@ -1,4 +1,4 @@
-const createSpinner = require('ora');
+import { createSpinner } from 'nanospinner';
 import { join, relative } from 'path';
 import { GitRepository } from '../../../utils/git-utils';
 
@@ -35,13 +35,13 @@ export async function prepareSourceRepo(
       tempImportBranch
     );
   }
-  spinner.succeed(
+  spinner.success(
     relativeSourceDir.trim()
       ? `Filtered git history to only include files in ${relativeSourceDir}`
       : `Filtered git history`
   );
 
-  spinner.succeed(
+  spinner.success(
     `${sourceRemoteUrl} has been prepared to be imported into this workspace on a temporary branch: ${tempImportBranch} in ${gitClient.root}`
   );
 }

@@ -1,4 +1,4 @@
-import * as ora from 'ora';
+import { createSpinner } from 'nanospinner';
 import { join } from 'path';
 import { CreateWorkspaceOptions } from './create-workspace-options';
 import { execAndWait } from './utils/child-process-utils';
@@ -62,7 +62,7 @@ export async function createEmptyWorkspace<T extends CreateWorkspaceOptions>(
       nxWorkspaceRoot = `\\"${nxWorkspaceRoot.slice(1, -1)}\\"`;
     }
   }
-  let workspaceSetupSpinner = ora(
+  let workspaceSetupSpinner = createSpinner(
     `Creating your workspace in ${directory}`
   ).start();
 
@@ -70,11 +70,11 @@ export async function createEmptyWorkspace<T extends CreateWorkspaceOptions>(
     const fullCommand = `${pmc.exec} nx ${command} --nxWorkspaceRoot=${nxWorkspaceRoot}`;
     await execAndWait(fullCommand, tmpDir);
 
-    workspaceSetupSpinner.succeed(
+    workspaceSetupSpinner.success(
       `Successfully created the workspace: ${directory}`
     );
   } catch (e) {
-    workspaceSetupSpinner.fail();
+    workspaceSetupSpinner.error();
     const message = e instanceof Error ? e.message : String(e);
     throw new CnwError(
       'WORKSPACE_CREATION_FAILED',

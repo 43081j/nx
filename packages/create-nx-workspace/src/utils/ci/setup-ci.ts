@@ -1,4 +1,4 @@
-import * as ora from 'ora';
+import { createSpinner } from 'nanospinner';
 
 import { execAndWait } from '../child-process-utils';
 import { CnwError } from '../error-utils';
@@ -9,17 +9,17 @@ export async function setupCI(
   ci: string,
   packageManager: PackageManager
 ) {
-  const ciSpinner = ora(`Generating CI workflow`).start();
+  const ciSpinner = createSpinner(`Generating CI workflow`).start();
   try {
     const pmc = getPackageManagerCommand(packageManager);
     const res = await execAndWait(
       `${pmc.exec} nx g @nx/workspace:ci-workflow --ci=${ci} --useRunMany=true`,
       directory
     );
-    ciSpinner.succeed('CI workflow has been generated successfully');
+    ciSpinner.success('CI workflow has been generated successfully');
     return res;
   } catch (e) {
-    ciSpinner.fail();
+    ciSpinner.error();
     const message = e instanceof Error ? e.message : String(e);
     throw new CnwError(
       'CI_WORKFLOW_FAILED',

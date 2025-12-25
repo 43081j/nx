@@ -14,7 +14,7 @@ import {
 import { installPackageToTmp } from '../../devkit-internals';
 import { workspaceRoot } from '../../utils/workspace-root';
 import { ConfigureAiAgentsOptions } from './command-object';
-import ora = require('ora');
+import { createSpinner } from 'nanospinner';
 import { relative } from 'path';
 
 export async function configureAiAgentsHandler(
@@ -263,7 +263,7 @@ export async function configureAiAgentsHandlerImpl(
     process.exit(0);
   }
 
-  const configSpinner = ora(`Configuring agent(s)...`).start();
+  const configSpinner = createSpinner(`Configuring agent(s)...`).start();
   try {
     await configureAgents(selectedAgents, workspaceRoot, false);
 
@@ -285,7 +285,7 @@ export async function configureAiAgentsHandlerImpl(
 
     return;
   } catch (e) {
-    configSpinner.fail('Failed to set up AI agents');
+    configSpinner.error('Failed to set up AI agents');
     output.error({
       title: 'Error details:',
       bodyLines: [e.message],

@@ -6,7 +6,7 @@ import {
   CompletionMessageKey,
 } from './messages';
 import { getFlowVariant, messages } from './ab-testing';
-import * as ora from 'ora';
+import { createSpinner } from 'nanospinner';
 
 export type NxCloud =
   | 'yes'
@@ -55,7 +55,7 @@ export async function connectToNxCloudForTemplate(
 }
 
 export function readNxCloudToken(directory: string) {
-  const nxCloudSpinner = ora(`Checking Nx Cloud setup`).start();
+  const nxCloudSpinner = createSpinner(`Checking Nx Cloud setup`).start();
   // nx-ignore-next-line
   const { getCloudOptions } = require(
     require.resolve(
@@ -68,7 +68,7 @@ export function readNxCloudToken(directory: string) {
   ) as typeof import('nx/src/nx-cloud/utilities/get-cloud-options');
 
   const { accessToken, nxCloudId } = getCloudOptions(directory);
-  nxCloudSpinner.succeed('Nx Cloud has been set up successfully');
+  nxCloudSpinner.success('Nx Cloud has been set up successfully');
   return accessToken || nxCloudId;
 }
 

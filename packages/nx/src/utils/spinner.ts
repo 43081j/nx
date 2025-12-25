@@ -1,10 +1,10 @@
-import * as ora from 'ora';
+import { createSpinner, type Spinner } from 'nanospinner';
 import { isCI } from './is-ci';
 
 export const SHOULD_SHOW_SPINNERS = process.stdout.isTTY && !isCI();
 
 class SpinnerManager {
-  #ora!: ReturnType<typeof ora>;
+  #spinner!: Spinner;
   #prefix: string | undefined;
 
   start(text?: string, prefix?: string): SpinnerManager {
@@ -14,47 +14,43 @@ class SpinnerManager {
     if (prefix !== undefined) {
       this.#prefix = prefix;
     }
-    if (this.#ora) {
-      this.#ora.text = text;
-      this.#ora.prefixText = this.#prefix;
+    if (this.#spinner) {
+      this.#spinner.start(text);
+      this.#spinner.update({text: this.#prefix});
     } else {
-      this.#createOra(text);
+      this.#createSpinner(text);
     }
-    this.#ora.start();
+    this.#spinner.start();
     return this;
   }
 
   succeed(text?: string) {
-    this.#ora?.succeed(text);
+    this.#spinner?.success(text);
   }
 
   stop() {
-    this.#ora?.stop();
+    this.#spinner?.stop();
   }
 
   fail(text?: string) {
-    this.#ora?.fail(text);
+    this.#spinner?.error(text);
   }
 
   updateText(text?: string) {
-    if (this.#ora) {
-      this.#ora.text = text;
+    if (this.#spinner) {
+      this.#spinner.update({ text });
     } else if (SHOULD_SHOW_SPINNERS) {
-      this.#createOra(text);
+      this.#createSpinner(text);
     }
   }
 
   isSpinning() {
-    return this.#ora?.isSpinning ?? false;
+    return this.#spinner?.isSpinning ?? false;
   }
 
-  #createOra(text?: string) {
-    this.#ora = ora({
-      text: text,
-      prefixText: this.#prefix,
-      hideCursor: false,
-      discardStdin: false,
-    });
+  #createSpinner(text?: string) {
+    this.#spinner = createSpinner(this.#prefix);
+    this.#spinner.start(text);
   }
 }
 
